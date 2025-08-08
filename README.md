@@ -1,1 +1,3 @@
-# Probability-and-Statistics
+# 確率統計概論
+- 乱数生成レポートのサンプルプログラム
+- MATLAB2024bで動作確認済み
