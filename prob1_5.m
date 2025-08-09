@@ -1,6 +1,4 @@
-% pareto_law_of_large_numbers_and_variance.m
-% パレート分布(x0=1, a=2)で乱数を生成し，
-% サンプル平均 X_n とサンプル分散 σ_n^2 を n=1…2000 でプロット
+% 問題1-5
 
 clearvars; close all; clc;
 
@@ -16,30 +14,25 @@ Nmax = 2000;   % 最大サンプル数
 U = rand(Nmax,1);
 X = x0 * (1 - U).^(-1/a);
 
-%% サンプル平均 X_n の計算
-Xn = cumsum(X) ./ (1:Nmax)';
-
-%% サンプル分散 σ_n^2 の計算
+%% サンプル分散 σ_n^2 の計算（母平均 2 を用いた逐次平均）
 sigma2_n = cumsum((X - 2).^2) ./ (1:Nmax)';
 
-%% プロット：サンプル平均とサンプル分散
-figure('Name','大数の法則と分散の挙動','NumberTitle','off');
-
-% サンプル平均
-subplot(2,1,1);
-plot(1:Nmax, Xn, 'LineWidth', 1.2);
-hold on;
-yline(2, 'r--','LineWidth',1.5);  % 理論期待値 2
-hold off;
-xlabel('n');
-ylabel('X_n');
-title('サンプル平均 X_n の収束');
-grid on;
-
-% サンプル分散
-subplot(2,1,2);
+%% プロット：サンプル分散
+fig = figure('Name','パレート分布における標本分散の推移','NumberTitle','off');
 plot(1:Nmax, sigma2_n, 'LineWidth', 1.2);
-xlabel('n');
-ylabel('\sigma_n^2');
-title('サンプル分散 \sigma_n^2 の挙動');
+xlabel('標本数n');
+ylabel('標本分散');
+title('パレート分布における標本分散の推移');
 grid on;
+
+%% CSV 用テーブル作成
+% 1) サンプル生データ（U と X）
+T_samples  = table(U, X, 'VariableNames', {'U_uniform','X_pareto'});
+% 2) 分散系列（n と sigma2_n）
+T_variance = table((1:Nmax)', sigma2_n, 'VariableNames', {'n','sigma2_n'});
+
+%% 保存（./results/prob1_5 に PNG と CSV を出力）
+save_to_results('prob1_5', fig, '問題1-5.png', {
+    '問題1-5サンプル生データ.csv', T_samples;
+    '問題1-5分散系列.csv',         T_variance
+});
